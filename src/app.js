@@ -8,10 +8,10 @@
  */
 import { WebGLRenderer, PerspectiveCamera, Vector3 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { SeedScene } from 'scenes';
+import { PlanetScene } from 'scenes';
 
 // Initialize core ThreeJS components
-const scene = new SeedScene();
+const scene = new PlanetScene();
 const camera = new PerspectiveCamera();
 const renderer = new WebGLRenderer({ antialias: true });
 
@@ -31,7 +31,7 @@ document.body.appendChild(canvas);
 const controls = new OrbitControls(camera, canvas);
 controls.enableDamping = true;
 controls.enablePan = false;
-controls.minDistance = 4;
+//controls.minDistance = 4;
 controls.maxDistance = 16;
 controls.update();
 
