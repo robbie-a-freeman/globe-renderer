@@ -11,7 +11,7 @@ class PlanetScene extends Scene {
         // Init state
         this.state = {
             gui: new Dat.GUI(), // Create GUI for scene
-            rotationSpeed: 1,
+            rotationSpeed: 0,
             updateList: [],
         };
 
@@ -31,6 +31,7 @@ class PlanetScene extends Scene {
         this.state.updateList.push(object);
     }
 
+/* //handles rotation
     update(timeStamp) {
         const { rotationSpeed, updateList } = this.state;
         this.rotation.y = (rotationSpeed * timeStamp) / 10000;
@@ -39,6 +40,28 @@ class PlanetScene extends Scene {
         for (const obj of updateList) {
             obj.update(timeStamp);
         }
+
+        
+    } */ 
+
+    // checks if more/less detail is to be rendered
+    // assumes the position of planet is 0,0,0
+    update(camera) {
+        // distance of camera from the object
+        let distance = camera.position.length();
+        let processedDetails = []
+
+        // determine arbitrary levels of details
+
+        // check if new details need to be rendered. if not, return
+            // if so, check if next level/location of mesh is created
+                // if not, generate this by:
+                // - generating new vertices and faces
+                // - saving indices of new vertices and faces
+                // - save indices object to processedDetails
+            // apply linterp to mesh geo
+
+        
     }
 }
 

@@ -31,7 +31,6 @@ document.body.appendChild(canvas);
 const controls = new OrbitControls(camera, canvas);
 controls.enableDamping = true;
 controls.enablePan = false;
-//controls.minDistance = 4;
 controls.maxDistance = 16;
 controls.update();
 
@@ -39,8 +38,10 @@ controls.update();
 const onAnimationFrameHandler = (timeStamp) => {
     controls.update();
     renderer.render(scene, camera);
-    scene.update && scene.update(timeStamp);
+    scene.update && scene.update(camera);
     window.requestAnimationFrame(onAnimationFrameHandler);
+
+    //console.log(camera);
 };
 window.requestAnimationFrame(onAnimationFrameHandler);
 
