@@ -12,6 +12,7 @@ class PlanetScene extends Scene {
         this.state = {
             gui: new Dat.GUI(), // Create GUI for scene
             rotationSpeed: 0,
+            wireframe: false,
             updateList: [],
         };
 
@@ -21,10 +22,34 @@ class PlanetScene extends Scene {
         // Add meshes to scene
         const planet = new Planet();
         const lights = new BasicLights();
-        this.add(planet, lights);
+        this.planet = planet;
+        this.add(this.planet, lights);
 
         // Populate GUI
         this.state.gui.add(this.state, 'rotationSpeed', -5, 5);
+        this.state.gui.add(this.state, 'wireframe');
+        
+        // arbitrary number of layers of detail processing
+        this.NUMBER_OF_LAYERS = 5;
+        this.previousLevel = 0;
+
+        // determine arbitrary levels of details
+        this.distances = [];
+        let startDist = 10;
+        for (let i = 0; i < this.NUMBER_OF_LAYERS; i++) {
+            this.distances.push(startDist / Math.pow(2, i));
+        }
+        // set up processedDetails list
+        this.processedDetails = [];
+        let initialDetails = {};
+        initialDetails.vertices = this.planet.getVertices();
+        console.log(initialDetails.vertices);
+        initialDetails.faces = this.planet.getFaces();
+        this.processedDetails.push(initialDetails);
+        for (let i = 1; i < this.NUMBER_OF_LAYERS; i++) {
+            this.processedDetails.push({});
+        }
+
     }
 
     addToUpdateList(object) {
@@ -47,13 +72,27 @@ class PlanetScene extends Scene {
     // checks if more/less detail is to be rendered
     // assumes the position of planet is 0,0,0
     update(camera) {
+
+
         // distance of camera from the object
         let distance = camera.position.length();
-        let processedDetails = []
-
-        // determine arbitrary levels of details
-
+        //console.log(distance);
         // check if new details need to be rendered. if not, return
+        for (let i = 0; i < this.NUMBER_OF_LAYERS; i++) {
+            if (distance > this.distances[i] || i == this.NUMBER_OF_LAYERS - 1) {
+                console.log('layer', i);
+                //console.log('processedDetails', this.processedDetails[i]);
+                if (isEmpty(this.processedDetails[i])) {
+                    console.log('processing', i);
+                    this.processedDetails[i] = this.planet.getDetails(i, this.previousLevel, this.processedDetails[i]);
+                }
+                //console.log('processedDetails', this.processedDetails[i]);
+                this.planet.updateVertices(this.processedDetails[i].vertices);
+                this.planet.updateFaces(this.processedDetails[i].faces);
+                this.previousLevel = i;
+                break;
+            }
+        }
             // if so, check if next level/location of mesh is created
                 // if not, generate this by:
                 // - generating new vertices and faces
@@ -66,3 +105,13 @@ class PlanetScene extends Scene {
 }
 
 export default PlanetScene;
+
+
+// helper function to check if object is empty
+function isEmpty(obj) {
+    for(var key in obj) {
+        if(obj.hasOwnProperty(key))
+            return false;
+    }
+    return true;
+}
