@@ -1,5 +1,5 @@
 import * as Dat from 'dat.gui';
-import { Scene, Color } from 'three';
+import { Scene, Color } from 'three'; //, MeshBasicMaterial, DoubleSide
 import { Planet } from 'objects';
 import { BasicLights } from 'lights';
 
@@ -45,6 +45,7 @@ class PlanetScene extends Scene {
         initialDetails.vertices = this.planet.getVertices();
         console.log(initialDetails.vertices);
         initialDetails.faces = this.planet.getFaces();
+        initialDetails.textureCoords = this.planet.getTextureCoords();
         this.processedDetails.push(initialDetails);
         for (let i = 1; i < this.NUMBER_OF_LAYERS; i++) {
             this.processedDetails.push({});
@@ -83,12 +84,17 @@ class PlanetScene extends Scene {
                 console.log('layer', i);
                 //console.log('processedDetails', this.processedDetails[i]);
                 if (isEmpty(this.processedDetails[i])) {
+
+                    //this.planet.mesh.material = new MeshBasicMaterial({color:0x00ffff, side:DoubleSide}); this works
+
                     console.log('processing', i);
                     this.processedDetails[i] = this.planet.getDetails(i, this.previousLevel, this.processedDetails[i]);
                 }
                 //console.log('processedDetails', this.processedDetails[i]);
                 this.planet.updateVertices(this.processedDetails[i].vertices);
                 this.planet.updateFaces(this.processedDetails[i].faces);
+                this.planet.updateTextureCoords(this.processedDetails[i].textureCoords);
+                console.log(this.planet.mesh.geometry.vertices);
                 this.previousLevel = i;
                 break;
             }
