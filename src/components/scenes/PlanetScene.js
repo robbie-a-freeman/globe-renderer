@@ -16,8 +16,8 @@ class PlanetScene extends Scene {
             updateList: [],
         };
 
-        // Set background to a nice color
-        this.background = new Color(0x7ec0ee);
+        // Set background to space-black
+        this.background = new Color(0x343435);
 
         // Add meshes to scene
         const planet = new Planet();
