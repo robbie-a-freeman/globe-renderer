@@ -1,7 +1,7 @@
 {
   "name": "dynamic-planet-detail-rendering",
   "repository": "globe-renderer",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "title": "Dynamic Planet Detail Rendering",
   "description": "Three.js application that dynamically renders and procedurally generates noise on a planet",
   "keywords": [
@@ -17,7 +17,7 @@
   ],
   "scripts": {
     "start": "webpack-dev-server --mode development --output-public-path \"\"",
-    "prebuild": "rimraf ./build && mkdir ./build",
+    "prebuild": "rimraf build && mkdir build",
     "build": "npm run prebuild && webpack --mode production --output-public-path \"\"",
     "format": "prettier --write '*.js' 'src/**/*.js'",
     "deploy": "npm run prebuild && webpack --mode production && gh-pages -d build"
