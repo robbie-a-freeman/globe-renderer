@@ -32,6 +32,7 @@ const controls = new OrbitControls(camera, canvas);
 controls.enableDamping = true;
 controls.enablePan = false;
 controls.maxDistance = 16;
+controls.minDistance = 2.1;
 controls.update();
 
 // Render loop
