@@ -47,7 +47,7 @@ class PlanetScene extends Scene {
         let updateThresholds = function (thr) {
             let startDist = 10;
             for (let i = 0; i < thr; i++) {
-                distances.push(startDist / Math.pow(2, i) + 1);
+                distances.push(startDist / Math.pow(1.5, i) + 1);
             }
         }
         updateThresholds(5);

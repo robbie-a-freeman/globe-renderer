@@ -199,7 +199,6 @@ class Planet extends Group {
             avgDist = avgDist + new Vector3().subVectors(center, neighbors[i]).length() * weights[i];
         }
         avgDist = avgDist;
-        console.log(avgDist);
 
         // multiply by v's normal. assume center is 0,0,0
         for (let i = 0; i < neighbors.length; i++) {
