@@ -12,6 +12,7 @@ class PlanetScene extends Scene {
         this.state = {
             gui: new Dat.GUI( { autoPlace: true }), // Create GUI for scene
             wireframe: false,
+            thresholds: 5,
             // texture: none,
             updateList: [],
         };
@@ -29,12 +30,28 @@ class PlanetScene extends Scene {
             planet.mesh.material.wireframe = flag;
         }
 
+        // arbitrary number of layers of detail processing
+        this.previousLevel = 0;
+
+        // determine arbitrary levels of details
+
+        let distances = [];
+        this.distances = distances;
+        let updateThresholds = function (thr) {
+            let startDist = 10;
+            for (let i = 0; i < thr; i++) {
+                distances.push(startDist / Math.pow(2, i) + 1);
+            }
+        }
+        updateThresholds(5);
+
         let dummyFunc = function() {
             console.log();
         }
 
         // Populate GUI
         this.state.gui.add(this.state, 'wireframe').onChange(showWireframe);
+        this.state.gui.add(this.state, 'thresholds', 1, 25, 1).onChange(updateThresholds);
         //this.state.gui.add(this.planet, 'loadTexture').name('Linterp'); 
         let folder = this.state.gui.addFolder('Noise generation');
         folder.add(this.planet, 'switchNoiseFuncLinterp').name('Linterp'); 
@@ -42,16 +59,6 @@ class PlanetScene extends Scene {
         folder.add(this.planet, 'switchNoiseFuncBrownian').name('Brownian');
         folder.add(this.planet, 'switchNoiseFuncRandom').name('Random');
         
-        // arbitrary number of layers of detail processing
-        this.NUMBER_OF_LAYERS = 5;
-        this.previousLevel = 0;
-
-        // determine arbitrary levels of details
-        this.distances = [];
-        let startDist = 10;
-        for (let i = 0; i < this.NUMBER_OF_LAYERS; i++) {
-            this.distances.push(startDist / Math.pow(2, i));
-        }
         // set up processedDetails list
         this.processedDetails = [];
         let initialDetails = {};
@@ -82,20 +89,19 @@ class PlanetScene extends Scene {
     // checks if more/less detail is to be rendered
     // assumes the position of planet is 0,0,0
     update(camera) {
-
-
         // distance of camera from the object
         let distance = camera.position.length();
         //console.log(distance);
         // check if new details need to be rendered. if not, return
-        for (let i = 0; i < this.NUMBER_OF_LAYERS; i++) {
-            if (distance > this.distances[i] || i == this.NUMBER_OF_LAYERS - 1) {
+        for (let i = 0; i < this.state.thresholds; i++) {
+            if (distance > this.distances[i] || i == this.state.thresholds - 1) {
                 console.log('layer', i);
                 //console.log('processedDetails', this.processedDetails[i]);
                 if (isEmpty(this.processedDetails[i])) {
-                    this.processedDetails[i] = this.planet.getDetails(i, this.previousLevel, this.processedDetails[i]);
+                    this.processedDetails[i] = this.planet.getDetails(i);
                 }
                 //console.log('processedDetails', this.processedDetails[i]);
+                this.planet.mesh.geometry = this.processedDetails[i];
                 this.previousLevel = i;
                 break;
             }

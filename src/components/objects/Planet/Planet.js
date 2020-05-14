@@ -5,8 +5,8 @@ class Planet extends Group {
         // Call parent Group() constructor
         super();
 
-        var geometry = new BoxBufferGeometry( 1, 1, 1 );
-        var material = new MeshBasicMaterial( {color: 0x00ff00} );
+        //var geometry = new BoxBufferGeometry( 1, 1, 1 );
+        //var material = new MeshBasicMaterial( {color: 0x00ff00} );
         
         //var cubeA = new Mesh( geometry, material );
         //cubeA.position.set( 0, 0, 0 );
@@ -81,11 +81,11 @@ class Planet extends Group {
     // generates details for Planet mesh. uses the given noise function
     // to generate noise at the next level.
     // Assumes the previous level is the current level.
-    getDetails(newLevel, noiseFunc) {
-        let details = {}
-        
-
-        return details;
+    getDetails(newLevel) {
+        //let details = {}
+        let triangleLevel = 10 * newLevel + 10;
+        //details.push(new SphereBufferGeometry(2, triangleLevel, triangleLevel));
+        return new SphereBufferGeometry(2, triangleLevel, triangleLevel);
     }
 
     linterp() {
