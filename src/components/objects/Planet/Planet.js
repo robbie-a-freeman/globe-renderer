@@ -1,4 +1,5 @@
-import { Group, BoxBufferGeometry, MeshBasicMaterial, Mesh, Vector3, SphereBufferGeometry, VertexColors } from 'three';
+import { Group, BoxBufferGeometry, TextureLoader, MeshBasicMaterial, MeshLambertMaterial, Mesh, DoubleSide, Vector2, Vector3, Face3, SphereBufferGeometry } from 'three';
+
 class Planet extends Group {
     constructor() {
         // Call parent Group() constructor
@@ -11,6 +12,15 @@ class Planet extends Group {
         //cubeA.position.set( 0, 0, 0 );
 
         var psGeometry = new SphereBufferGeometry(2,10,10);
+        // randomize the vertex positions that make up the shape
+        /*for (let i = 0; i < psGeometry.vertices.length; i++) {
+            psGeometry.vertices[i].set(psGeometry.vertices[i].x + 1 * (Math.random() - 0.5), psGeometry.vertices[i].y + 1 * (Math.random() - 0.5), psGeometry.vertices[i].z + 1 * (Math.random() - 0.5));
+        } */
+        
+        var texture = new TextureLoader().load('earth.jpg');
+        var psMaterial = new MeshLambertMaterial( { map: texture } ); 
+
+        psMaterial.aoMapIntensity = 0;
 
         var psSphere = new Mesh(psGeometry, new MeshBasicMaterial({color:0x0000ff})); //, side:DoubleSide
         psSphere.material.wireframe = false;

@@ -32,10 +32,14 @@ const controls = new OrbitControls(camera, canvas);
 controls.enableDamping = true;
 controls.enablePan = false;
 controls.maxDistance = 16;
+controls.minDistance = 2.1;
 controls.update();
 
 // Render loop
 const onAnimationFrameHandler = (timeStamp) => {
+    // non-linear zoom speed
+    controls.zoomSpeed = Math.pow(camera.position.length() - 2.05, 0.5) / 10;
+    // console.log(controls.zoomSpeed)
     controls.update();
     renderer.render(scene, camera);
     scene.update && scene.update(camera);
