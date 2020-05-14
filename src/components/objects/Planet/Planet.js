@@ -226,8 +226,12 @@ class Planet extends Group {
 
     }
 
-    random(v, oldSphere) {
-
+    // places a PlaneBufferGeometry object over the specified point with enhanced
+    // coloring based on the surface below of the sphere.
+    random(v, oldSphere, lvl) {
+        if (lvl > 4) {
+            
+        }
     }
 }
 
