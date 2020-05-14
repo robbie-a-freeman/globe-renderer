@@ -22,7 +22,7 @@ class Planet extends Group {
 
         psMaterial.aoMapIntensity = 0;
 
-        var psSphere = new Mesh(psGeometry, new MeshBasicMaterial({color:0x0000ff})); //, side:DoubleSide
+        var psSphere = new Mesh(psGeometry, psMaterial); //, side:DoubleSide
         psSphere.material.wireframe = false;
         this.mesh = psSphere;
         
