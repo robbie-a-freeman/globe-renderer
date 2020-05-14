@@ -222,8 +222,17 @@ class Planet extends Group {
         return newV.add(perlinVec);
     }
 
-    brownian(v, oldSphere) {
+    brownian(v, oldSphere, lvl) {
+        // perform linterp
+        let newV = this.linterp(v, oldSphere).clone();
 
+        // create noise
+        let noise = new Vector3(Math.random(), Math.random(), Math.random());
+        noise.multiplyScalar(0.03);
+
+        newV.add(noise);
+
+        return newV;
     }
 
     random(v, oldSphere) {
