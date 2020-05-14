@@ -117,7 +117,7 @@ class Planet extends Group {
             let vertex = new Vector3(newPositions.getX(i), newPositions.getY(i), newPositions.getZ(i));
             let vertexIsInSphere = vertexInSphere(oldSphere, vertex);
             if (!vertexIsInSphere) {
-                vertex = this.noiseFunc(vertex, oldSphere);
+                vertex = this.noiseFunc(vertex, oldSphere, newLevel);
                 newPositions.setX(i, vertex.x);
                 newPositions.setY(i, vertex.y);
                 newPositions.setZ(i, vertex.z);
@@ -156,7 +156,7 @@ class Planet extends Group {
 
     // Below are the noise functions. linterp is default
 
-    linterp(v, oldSphere) {
+    linterp(v, oldSphere, lvl) {
         let newV = new Vector3(0,0,0);
 
         // find the closest vertices to v
@@ -209,8 +209,13 @@ class Planet extends Group {
         return newV;
     }
 
-    perlin(v, oldSphere) {
-        //return new Vector3()
+    perlin(v, oldSphere, lvl) {
+        // perform linterp
+        let newV = this.linterp(v, oldSphere).clone();
+        // generate vector
+        let perlinVec = new Vector3((Math.random() - 0.5) * 0.1 / lvl, (Math.random() - 0.5) * 0.1 / lvl, (Math.random() - 0.5) * 0.1 / lvl);
+        // apply vector
+        return newV.add(perlinVec);
     }
 
     brownian(v, oldSphere) {
