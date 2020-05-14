@@ -1,4 +1,4 @@
-import { Group, BoxBufferGeometry, MeshBasicMaterial, Mesh, DoubleSide, Vector2, Vector3, Face3, SphereBufferGeometry } from 'three';
+import { Group, BoxBufferGeometry, MeshBasicMaterial, MeshLambertMaterial, Mesh, DoubleSide, Vector2, Vector3, Face3, SphereBufferGeometry } from 'three';
 
 class Planet extends Group {
     constructor() {
@@ -17,7 +17,10 @@ class Planet extends Group {
             psGeometry.vertices[i].set(psGeometry.vertices[i].x + 1 * (Math.random() - 0.5), psGeometry.vertices[i].y + 1 * (Math.random() - 0.5), psGeometry.vertices[i].z + 1 * (Math.random() - 0.5));
         } */
 
-        var psSphere = new Mesh(psGeometry, new MeshBasicMaterial({color:0x0000ff})); //, side:DoubleSide
+        var psMaterial = new MeshLambertMaterial({color:0x333333});
+        psMaterial.aoMapIntensity = 0;
+
+        var psSphere = new Mesh(psGeometry, psMaterial);  //, side:DoubleSide
         psSphere.material.wireframe = false;
         this.mesh = psSphere;
         
