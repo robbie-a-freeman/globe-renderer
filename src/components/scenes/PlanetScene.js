@@ -12,10 +12,13 @@ class PlanetScene extends Scene {
         this.state = {
             gui: new Dat.GUI( { autoPlace: true }), // Create GUI for scene
             wireframe: false,
+            rotation: 2,
             thresholds: 5,
             // texture: none,
             updateList: [],
         };
+
+        var rotation = 2;
 
         // Set background to space-black
         this.background = new Color(0x343435);
@@ -28,6 +31,10 @@ class PlanetScene extends Scene {
 
         let showWireframe = function(flag) {
             planet.mesh.material.wireframe = flag;
+        }
+
+        let updateRotation = function(speed) {
+            rotation = speed;
         }
 
         // arbitrary number of layers of detail processing
@@ -51,6 +58,7 @@ class PlanetScene extends Scene {
 
         // Populate GUI
         this.state.gui.add(this.state, 'wireframe').onChange(showWireframe);
+        this.state.gui.add(this.state, 'rotation', -10, 10, 1).onChange(updateRotation);
         this.state.gui.add(this.state, 'thresholds', 1, 25, 1).onChange(updateThresholds);
         //this.state.gui.add(this.planet, 'loadTexture').name('Linterp'); 
         let folder = this.state.gui.addFolder('Noise generation');
@@ -105,7 +113,10 @@ class PlanetScene extends Scene {
                 this.previousLevel = i;
                 break;
             }
-        }        
+        }
+        
+        // rotate the planet
+        this.planet.mesh.rotation.y += 0.001 * this.state.rotation;
     }
 
     
