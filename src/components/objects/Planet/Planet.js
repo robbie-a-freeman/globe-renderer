@@ -101,8 +101,11 @@ class Planet extends Group {
 
         let vertexInSphere = function(s, v) {
             let positions = s.getAttribute("position");
+            let EPS = 0.000001;
             for (let i = 0; i < positions.count; i++) {
-                if (v.x == positions.getX(i) && v.y == positions.getY(i) && v.z == positions.getZ(i)) {
+                if (v.x < positions.getX(i) + EPS && v.x > positions.getX(i) - EPS &&
+                    v.y < positions.getY(i) + EPS && v.y > positions.getY(i) - EPS &&
+                    v.z < positions.getZ(i) + EPS && v.z > positions.getZ(i) - EPS) {
                     return true;
                 }
             }
@@ -213,7 +216,8 @@ class Planet extends Group {
         // perform linterp
         let newV = this.linterp(v, oldSphere).clone();
         // generate vector
-        let perlinVec = new Vector3((Math.random() - 0.5) * 0.1 / lvl, (Math.random() - 0.5) * 0.1 / lvl, (Math.random() - 0.5) * 0.1 / lvl);
+        let scale = 2 * lvl;
+        let perlinVec = new Vector3((Math.random() - 0.5) * 0.1 / scale, (Math.random() - 0.5) * 0.1 / scale, (Math.random() - 0.5) * 0.1 / scale);
         // apply vector
         return newV.add(perlinVec);
     }
