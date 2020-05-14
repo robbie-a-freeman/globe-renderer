@@ -10,9 +10,9 @@ class PlanetScene extends Scene {
 
         // Init state
         this.state = {
-            gui: new Dat.GUI(), // Create GUI for scene
-            rotationSpeed: 0,
+            gui: new Dat.GUI( { autoPlace: true }), // Create GUI for scene
             wireframe: false,
+            // texture: none,
             updateList: [],
         };
 
@@ -25,9 +25,22 @@ class PlanetScene extends Scene {
         this.planet = planet;
         this.add(this.planet, lights);
 
+        let showWireframe = function(flag) {
+            planet.mesh.material.wireframe = flag;
+        }
+
+        let dummyFunc = function() {
+            console.log();
+        }
+
         // Populate GUI
-        this.state.gui.add(this.state, 'rotationSpeed', -5, 5);
-        this.state.gui.add(this.state, 'wireframe');
+        this.state.gui.add(this.state, 'wireframe').onChange(showWireframe);
+        //this.state.gui.add(this.planet, 'loadTexture').name('Linterp'); 
+        let folder = this.state.gui.addFolder('Noise generation');
+        folder.add(this.planet, 'switchNoiseFuncLinterp').name('Linterp'); 
+        folder.add(this.planet, 'switchNoiseFuncPerlin').name('Perlin');
+        folder.add(this.planet, 'switchNoiseFuncBrownian').name('Brownian');
+        folder.add(this.planet, 'switchNoiseFuncRandom').name('Random');
         
         // arbitrary number of layers of detail processing
         this.NUMBER_OF_LAYERS = 5;
@@ -42,10 +55,6 @@ class PlanetScene extends Scene {
         // set up processedDetails list
         this.processedDetails = [];
         let initialDetails = {};
-        initialDetails.vertices = this.planet.getVertices();
-        console.log(initialDetails.vertices);
-        initialDetails.faces = this.planet.getFaces();
-        initialDetails.textureCoords = this.planet.getTextureCoords();
         this.processedDetails.push(initialDetails);
         for (let i = 1; i < this.NUMBER_OF_LAYERS; i++) {
             this.processedDetails.push({});
@@ -84,30 +93,16 @@ class PlanetScene extends Scene {
                 console.log('layer', i);
                 //console.log('processedDetails', this.processedDetails[i]);
                 if (isEmpty(this.processedDetails[i])) {
-
-                    //this.planet.mesh.material = new MeshBasicMaterial({color:0x00ffff, side:DoubleSide}); this works
-
-                    console.log('processing', i);
                     this.processedDetails[i] = this.planet.getDetails(i, this.previousLevel, this.processedDetails[i]);
                 }
                 //console.log('processedDetails', this.processedDetails[i]);
-                this.planet.updateVertices(this.processedDetails[i].vertices);
-                this.planet.updateFaces(this.processedDetails[i].faces);
-                this.planet.updateTextureCoords(this.processedDetails[i].textureCoords);
-                console.log(this.planet.mesh.geometry.vertices);
                 this.previousLevel = i;
                 break;
             }
-        }
-            // if so, check if next level/location of mesh is created
-                // if not, generate this by:
-                // - generating new vertices and faces
-                // - saving indices of new vertices and faces
-                // - save indices object to processedDetails
-            // apply linterp to mesh geo
-
-        
+        }        
     }
+
+    
 }
 
 export default PlanetScene;
